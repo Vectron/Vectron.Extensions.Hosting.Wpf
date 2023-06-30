@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetPlatformIdentifier>windows</TargetPlatformIdentifier>
+    <OutputType>Library</OutputType>
+    <UseWPF>true</UseWPF>
+    <Description>Extensions for setting up WPF with Microsoft.Extensions.Hosting</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+  </ItemGroup>
+
+</Project>

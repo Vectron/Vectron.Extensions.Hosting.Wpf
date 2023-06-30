@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{09CF3ACE-1DED-4D5D-BA82-9E75BAA48A93}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E5A10994-D5B8-4CFC-BA36-94A7ADF83606}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{02F75F73-4221-40F0-A306-2E6DD73D4A61}"
+	ProjectSection(SolutionItems) = preProject
+		.github\dependabot.yml = .github\dependabot.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{3FDA2E46-183C-4EDB-B6B3-85C5B766BD91}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\BuildTestDeploy.yml = .github\workflows\BuildTestDeploy.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9741578B-89EB-4C40-B62F-417025EBCCDF}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		.runsettings = .runsettings
+		Directory.Build.props = Directory.Build.props
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+		version.json = version.json
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vectron.Extensions.Hosting.Wpf", "src\Vectron.Extensions.Hosting.Wpf\Vectron.Extensions.Hosting.Wpf.csproj", "{A4B64FE5-23E0-4139-BD65-A87FE41C5E56}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A4B64FE5-23E0-4139-BD65-A87FE41C5E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4B64FE5-23E0-4139-BD65-A87FE41C5E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4B64FE5-23E0-4139-BD65-A87FE41C5E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4B64FE5-23E0-4139-BD65-A87FE41C5E56}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3FDA2E46-183C-4EDB-B6B3-85C5B766BD91} = {02F75F73-4221-40F0-A306-2E6DD73D4A61}
+		{A4B64FE5-23E0-4139-BD65-A87FE41C5E56} = {E5A10994-D5B8-4CFC-BA36-94A7ADF83606}
+	EndGlobalSection
+EndGlobal
