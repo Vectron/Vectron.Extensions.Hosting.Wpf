@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Markup;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Vectron.Extensions.Hosting.Wpf;
 
@@ -57,6 +58,42 @@ public static class ServiceCollectionExtensions
     {
         _ = services.AddTransient(WindowFactory<TWindow, TViewModel>);
         _ = services.AddTransient<TViewModel>();
+        return services;
+    }
+
+    /// <summary>
+    /// Adds services required for using wpf.
+    /// </summary>
+    /// <typeparam name="TApplication">The main WPF entry point.</typeparam>
+    /// <typeparam name="TMainWindow">The main window to show.</typeparam>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
+    /// <returns>A reference to this instance after the operation has completed.</returns>
+    public static IServiceCollection AddWpf<TApplication, TMainWindow>(this IServiceCollection services)
+        where TApplication : Application, IComponentConnector
+        where TMainWindow : Window, IComponentConnector
+    {
+        _ = services.AddHostedService<WpfHostedService<TApplication, TMainWindow>>();
+        services.TryAddSingleton<TApplication>();
+        services.TryAddSingleton<TMainWindow>();
+        return services;
+    }
+
+    /// <summary>
+    /// Adds services required for using wpf.
+    /// </summary>
+    /// <typeparam name="TApplication">The main WPF entry point.</typeparam>
+    /// <typeparam name="TMainWindow">The main window to show.</typeparam>
+    /// <typeparam name="TMainWindowViewModel">The main window view model.</typeparam>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
+    /// <returns>A reference to this instance after the operation has completed.</returns>
+    public static IServiceCollection AddWpf<TApplication, TMainWindow, TMainWindowViewModel>(this IServiceCollection services)
+        where TApplication : Application, IComponentConnector
+        where TMainWindow : Window, IComponentConnector
+        where TMainWindowViewModel : class
+    {
+        _ = services.AddHostedService<WpfHostedService<TApplication, TMainWindow>>();
+        services.TryAddSingleton<TApplication>();
+        _ = services.AddWindowSingleton<TMainWindow, TMainWindowViewModel>();
         return services;
     }
 
