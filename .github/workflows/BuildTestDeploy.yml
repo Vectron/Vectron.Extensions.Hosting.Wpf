@@ -19,7 +19,7 @@ jobs:
   call-build-test:
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ windows-latest ]
     uses: Vectron/GithubWorkflows/.github/workflows/BuildAndTest.yml@main
     with:
       os: ${{ matrix.os }}
@@ -32,7 +32,7 @@ jobs:
       packages: write
     uses: Vectron/GithubWorkflows/.github/workflows/DeployNugetGithub.yml@main
     with:
-      os: ubuntu-latest
+      os: windows-latest
       dotnet_version: 7.0.x
       solution_file: Vectron.Extensions.Hosting.Wpf.sln
     secrets:
