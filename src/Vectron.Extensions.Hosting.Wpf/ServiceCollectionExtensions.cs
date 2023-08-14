@@ -22,8 +22,8 @@ public static class ServiceCollectionExtensions
         where TWindow : Window, IComponentConnector
         where TViewModel : class
     {
-        _ = services.AddTransient(WindowFactory<TWindow, TViewModel>);
-        _ = services.AddTransient<TViewModel>();
+        _ = services.AddScoped(WindowFactory<TWindow, TViewModel>);
+        _ = services.AddScoped<TViewModel>();
         return services;
     }
 
@@ -39,8 +39,8 @@ public static class ServiceCollectionExtensions
         where TWindow : Window, IComponentConnector
         where TViewModel : class
     {
-        _ = services.AddTransient(WindowFactory<TWindow, TViewModel>);
-        _ = services.AddTransient<TViewModel>();
+        _ = services.AddSingleton(WindowFactory<TWindow, TViewModel>);
+        _ = services.AddSingleton<TViewModel>();
         return services;
     }
 
