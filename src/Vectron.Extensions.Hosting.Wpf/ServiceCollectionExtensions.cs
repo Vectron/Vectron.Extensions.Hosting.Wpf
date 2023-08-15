@@ -12,30 +12,6 @@ namespace Vectron.Extensions.Hosting.Wpf;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Add a <see cref="DataTemplate"/> to the <see cref="ResourceDictionaryOptions"/>.
-    /// </summary>
-    /// <param name="options">The <see cref="ResourceDictionaryOptions"/> to add the item to.</param>
-    /// <param name="dataTemplate">The <see cref="DataTemplate"/> to add.</param>
-    /// <returns>The updated <see cref="ResourceDictionaryOptions"/>.</returns>
-    public static ResourceDictionaryOptions Add(this ResourceDictionaryOptions options, DataTemplate dataTemplate)
-    {
-        options.Entries.Add(dataTemplate.DataTemplateKey, dataTemplate);
-        return options;
-    }
-
-    /// <summary>
-    /// Add a source to an other <see cref="ResourceDictionary"/> to include in this application.
-    /// </summary>
-    /// <param name="options">The <see cref="ResourceDictionaryOptions"/> to add the item to.</param>
-    /// <param name="source">The <see cref="Uri"/> to the <see cref="ResourceDictionary"/> location.</param>
-    /// <returns>The updated <see cref="ResourceDictionaryOptions"/>.</returns>
-    public static ResourceDictionaryOptions Add(this ResourceDictionaryOptions options, Uri source)
-    {
-        options.Sources.Add(source);
-        return options;
-    }
-
-    /// <summary>
     /// Add a <see cref="DataTemplate"/> to the <see cref="ResourceDictionary"/>.
     /// </summary>
     /// <typeparam name="TData">The type of the view model.</typeparam>
@@ -46,7 +22,7 @@ public static class ServiceCollectionExtensions
         where TData : class
         where TView : UserControl
     {
-        var template = CreateTemplate<TData, TView>();
+        var template = DataTemplateUtilities.CreateDataTemplate<TData, TView>();
         _ = services.ConfigureResourceDictionary(options => options.Add(template));
         return services;
     }
@@ -163,34 +139,6 @@ public static class ServiceCollectionExtensions
     {
         _ = services.Configure(configureOptions);
         return services;
-    }
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "MA0101:String contains an implicit end of line character", Justification = "Idea is to use new lines.")]
-    private static DataTemplate CreateTemplate<TData, TView>()
-    {
-        var dataType = typeof(TData);
-        var viewType = typeof(TView);
-
-        var xaml = $$"""
-            <DataTemplate DataType="{x:Type vm:{{dataType.Name}}}">
-                <v:{{viewType.Name}} />
-            </DataTemplate>
-            """;
-
-        var context = new ParserContext
-        {
-            XamlTypeMapper = new XamlTypeMapper(Array.Empty<string>()),
-        };
-        context.XamlTypeMapper.AddMappingProcessingInstruction("vm", dataType.Namespace, dataType.Assembly.FullName);
-        context.XamlTypeMapper.AddMappingProcessingInstruction("v", viewType.Namespace, viewType.Assembly.FullName);
-
-        context.XmlnsDictionary.Add(string.Empty, "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
-        context.XmlnsDictionary.Add("x", "http://schemas.microsoft.com/winfx/2006/xaml");
-        context.XmlnsDictionary.Add("vm", "vm");
-        context.XmlnsDictionary.Add("v", "v");
-
-        var template = (DataTemplate)XamlReader.Parse(xaml, context);
-        return template;
     }
 
     private static TWindow WindowFactory<TWindow, TViewModel>(IServiceProvider serviceProvider)
