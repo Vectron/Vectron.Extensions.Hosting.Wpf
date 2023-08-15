@@ -2,6 +2,8 @@ using System.Windows;
 using System.Windows.Markup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Vectron.Extensions.Hosting.Wpf;
 
@@ -15,17 +17,27 @@ public sealed class WpfHostedService<TApplication, TMainWindow> : BackgroundServ
     where TMainWindow : Window, IComponentConnector
 {
     private readonly IHostApplicationLifetime hostApplicationLifetime;
+    private readonly ILogger<WpfHostedService<TApplication, TMainWindow>> logger;
     private readonly IServiceProvider serviceProvider;
+    private readonly ResourceDictionaryOptions settings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WpfHostedService{TApplication, TMainWindow}"/> class.
     /// </summary>
     /// <param name="serviceProvider">A <see cref="IServiceProvider"/> for resolving services.</param>
     /// <param name="hostApplicationLifetime">The <see cref="IHostApplicationLifetime"/>.</param>
-    public WpfHostedService(IServiceProvider serviceProvider, IHostApplicationLifetime hostApplicationLifetime)
+    /// <param name="options">Options for configuring the <see cref="ResourceDictionary"/>.</param>
+    /// <param name="logger">A <see cref="ILogger"/>.</param>
+    public WpfHostedService(
+        IServiceProvider serviceProvider,
+        IHostApplicationLifetime hostApplicationLifetime,
+        IOptions<ResourceDictionaryOptions> options,
+        ILogger<WpfHostedService<TApplication, TMainWindow>> logger)
     {
         this.serviceProvider = serviceProvider;
         this.hostApplicationLifetime = hostApplicationLifetime;
+        this.logger = logger;
+        settings = options.Value;
     }
 
     /// <inheritdoc/>
@@ -35,6 +47,24 @@ public sealed class WpfHostedService<TApplication, TMainWindow> : BackgroundServ
         var thread = new Thread(() =>
         {
             var application = serviceProvider.GetRequiredService<TApplication>();
+
+            foreach (var (key, value) in settings.Entries)
+            {
+                try
+                {
+                    application.Resources.Add(key, value);
+                }
+                catch (Exception ex)
+                {
+                    logger.FailedToAddKeyToResourceDictionary(key, ex);
+                }
+            }
+
+            foreach (var source in settings.Sources)
+            {
+                application.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = source });
+            }
+
             var mainWindow = serviceProvider.GetRequiredService<TMainWindow>();
             using var cancellationTokenRegistration = stoppingToken.Register(application.Shutdown);
             application.InitializeComponent();
