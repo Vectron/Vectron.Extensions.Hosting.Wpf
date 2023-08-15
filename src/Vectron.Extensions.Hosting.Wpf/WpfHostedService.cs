@@ -47,28 +47,11 @@ public sealed class WpfHostedService<TApplication, TMainWindow> : BackgroundServ
         var thread = new Thread(() =>
         {
             var application = serviceProvider.GetRequiredService<TApplication>();
-
-            foreach (var dataTemplateDescriptor in settings.DataTemplates)
-            {
-                try
-                {
-                    var dataTemplate = DataTemplateUtilities.CreateDataTemplate(dataTemplateDescriptor.DataType, dataTemplateDescriptor.ViewType);
-                    application.Resources.Add(dataTemplate.DataTemplateKey, dataTemplate);
-                }
-                catch (Exception ex)
-                {
-                    logger.FailedToAddKeyToResourceDictionary(dataTemplateDescriptor, ex);
-                }
-            }
-
-            foreach (var source in settings.Sources)
-            {
-                application.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = source });
-            }
-
             var mainWindow = serviceProvider.GetRequiredService<TMainWindow>();
             using var cancellationTokenRegistration = stoppingToken.Register(application.Shutdown);
             application.InitializeComponent();
+            SetupResourceDictionary(application);
+
             _ = application.Run(mainWindow);
             taskCompletionSource.SetResult();
             hostApplicationLifetime.StopApplication();
@@ -78,5 +61,26 @@ public sealed class WpfHostedService<TApplication, TMainWindow> : BackgroundServ
         thread.Start();
 
         return taskCompletionSource.Task;
+    }
+
+    private void SetupResourceDictionary(TApplication application)
+    {
+        foreach (var dataTemplateDescriptor in settings.DataTemplates)
+        {
+            try
+            {
+                var dataTemplate = DataTemplateUtilities.CreateDataTemplate(dataTemplateDescriptor.DataType, dataTemplateDescriptor.ViewType);
+                application.Resources.Add(dataTemplate.DataTemplateKey, dataTemplate);
+            }
+            catch (Exception ex)
+            {
+                logger.FailedToAddKeyToResourceDictionary(dataTemplateDescriptor, ex);
+            }
+        }
+
+        foreach (var source in settings.Sources)
+        {
+            application.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = source });
+        }
     }
 }
