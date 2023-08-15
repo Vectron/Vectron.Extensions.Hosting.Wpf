@@ -48,15 +48,16 @@ public sealed class WpfHostedService<TApplication, TMainWindow> : BackgroundServ
         {
             var application = serviceProvider.GetRequiredService<TApplication>();
 
-            foreach (var (key, value) in settings.Entries)
+            foreach (var dataTemplateDescriptor in settings.DataTemplates)
             {
                 try
                 {
-                    application.Resources.Add(key, value);
+                    var dataTemplate = DataTemplateUtilities.CreateDataTemplate(dataTemplateDescriptor.DataType, dataTemplateDescriptor.ViewType);
+                    application.Resources.Add(dataTemplate.DataTemplateKey, dataTemplate);
                 }
                 catch (Exception ex)
                 {
-                    logger.FailedToAddKeyToResourceDictionary(key, ex);
+                    logger.FailedToAddKeyToResourceDictionary(dataTemplateDescriptor, ex);
                 }
             }
 

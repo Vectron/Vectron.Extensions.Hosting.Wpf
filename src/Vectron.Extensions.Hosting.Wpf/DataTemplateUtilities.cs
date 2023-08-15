@@ -1,5 +1,4 @@
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Markup;
 
 namespace Vectron.Extensions.Hosting.Wpf;
@@ -7,22 +6,17 @@ namespace Vectron.Extensions.Hosting.Wpf;
 /// <summary>
 /// Helper class for creating <see cref="DataTemplate"/>.
 /// </summary>
-public static class DataTemplateUtilities
+internal static class DataTemplateUtilities
 {
     /// <summary>
     /// Create a data template from a Data type and a view type.
     /// </summary>
-    /// <typeparam name="TData">The type of data.</typeparam>
-    /// <typeparam name="TView">The view to use for the data.</typeparam>
+    /// <param name="dataType">The type of the DataType key.</param>
+    /// <param name="viewType">The type of the view to use.</param>
     /// <returns>The constructed <see cref="DataTemplate"/>.</returns>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "MA0101:String contains an implicit end of line character", Justification = "Idea is to use new lines.")]
-    public static DataTemplate CreateDataTemplate<TData, TView>()
-        where TData : class
-        where TView : UserControl
+    public static DataTemplate CreateDataTemplate(Type dataType, Type viewType)
     {
-        var dataType = typeof(TData);
-        var viewType = typeof(TView);
-
         var xaml = $$"""
             <DataTemplate DataType="{x:Type vm:{{dataType.Name}}}">
                 <v:{{viewType.Name}} />

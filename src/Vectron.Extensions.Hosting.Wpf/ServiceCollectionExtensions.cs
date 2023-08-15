@@ -22,8 +22,7 @@ public static class ServiceCollectionExtensions
         where TData : class
         where TView : UserControl
     {
-        var template = DataTemplateUtilities.CreateDataTemplate<TData, TView>();
-        _ = services.ConfigureResourceDictionary(options => options.Add(template));
+        _ = services.ConfigureResourceDictionary(options => options.Add<TData, TView>());
         return services;
     }
 

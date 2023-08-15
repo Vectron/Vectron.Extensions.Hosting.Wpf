@@ -12,14 +12,14 @@ public class ResourceDictionaryOptions
     /// </summary>
     public ResourceDictionaryOptions()
     {
-        Entries = new Dictionary<object, object>();
+        DataTemplates = new List<DataTemplateDescriptor>();
         Sources = new List<Uri>();
     }
 
     /// <summary>
     /// Gets the resources to add.
     /// </summary>
-    public IDictionary<object, object> Entries
+    public IList<DataTemplateDescriptor> DataTemplates
     {
         get;
         init;
@@ -33,4 +33,11 @@ public class ResourceDictionaryOptions
         get;
         init;
     }
+
+    /// <summary>
+    /// Describes how a <see cref="DataTemplate"/> should be constructed.
+    /// </summary>
+    /// <param name="DataType">The type of the data object.</param>
+    /// <param name="ViewType">The type of the view to display this template.</param>
+    public record DataTemplateDescriptor(Type DataType, Type ViewType);
 }

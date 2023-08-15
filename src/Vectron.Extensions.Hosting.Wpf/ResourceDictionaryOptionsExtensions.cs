@@ -19,20 +19,8 @@ public static class ResourceDictionaryOptionsExtensions
         where TData : class
         where TView : UserControl
     {
-        var template = DataTemplateUtilities.CreateDataTemplate<TData, TView>();
-        return options.Add(template);
-    }
-
-    /// <summary>
-    /// Add a <see cref="DataTemplate"/> to the <see cref="ResourceDictionaryOptions"/>.
-    /// </summary>
-    /// <param name="options">The <see cref="ResourceDictionaryOptions"/> to add the item to.</param>
-    /// <param name="dataTemplate">The <see cref="DataTemplate"/> to add.</param>
-    /// <returns>The updated <see cref="ResourceDictionaryOptions"/>.</returns>
-    public static ResourceDictionaryOptions Add(this ResourceDictionaryOptions options, DataTemplate dataTemplate)
-    {
-        options.Entries.Add(dataTemplate.DataTemplateKey, dataTemplate);
-        return options;
+        var descriptor = new ResourceDictionaryOptions.DataTemplateDescriptor(typeof(TData), typeof(TView));
+        return options.Add(descriptor);
     }
 
     /// <summary>
@@ -44,6 +32,12 @@ public static class ResourceDictionaryOptionsExtensions
     public static ResourceDictionaryOptions Add(this ResourceDictionaryOptions options, Uri source)
     {
         options.Sources.Add(source);
+        return options;
+    }
+
+    private static ResourceDictionaryOptions Add(this ResourceDictionaryOptions options, ResourceDictionaryOptions.DataTemplateDescriptor descriptor)
+    {
+        options.DataTemplates.Add(descriptor);
         return options;
     }
 }
