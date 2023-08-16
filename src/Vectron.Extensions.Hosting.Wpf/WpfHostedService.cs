@@ -80,7 +80,13 @@ public sealed class WpfHostedService<TApplication, TMainWindow> : BackgroundServ
 
         foreach (var source in settings.Sources)
         {
-            application.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = source });
+            if (!Uri.TryCreate(source, UriKind.RelativeOrAbsolute, out var uri))
+            {
+                logger.InvalidUriFormat(source);
+                continue;
+            }
+
+            application.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = uri });
         }
     }
 }

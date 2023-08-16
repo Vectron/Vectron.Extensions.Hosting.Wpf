@@ -29,7 +29,7 @@ public static class ResourceDictionaryOptionsExtensions
     /// <param name="options">The <see cref="ResourceDictionaryOptions"/> to add the item to.</param>
     /// <param name="source">The <see cref="Uri"/> to the <see cref="ResourceDictionary"/> location.</param>
     /// <returns>The updated <see cref="ResourceDictionaryOptions"/>.</returns>
-    public static ResourceDictionaryOptions Add(this ResourceDictionaryOptions options, Uri source)
+    public static ResourceDictionaryOptions Add(this ResourceDictionaryOptions options, string source)
     {
         options.Sources.Add(source);
         return options;

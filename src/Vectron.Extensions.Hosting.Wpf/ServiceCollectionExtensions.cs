@@ -34,16 +34,7 @@ public static class ServiceCollectionExtensions
     /// <returns>A reference to this instance after the operation has completed.</returns>
     public static IServiceCollection AddResourceDictionary(this IServiceCollection services, string uri)
     {
-        var creationOptions = new UriCreationOptions()
-        {
-            DangerousDisablePathAndQueryCanonicalization = false,
-        };
-
-        if (Uri.TryCreate(uri, creationOptions, out var result))
-        {
-            _ = services.ConfigureResourceDictionary(options => options.Add(result));
-        }
-
+        _ = services.ConfigureResourceDictionary(options => options.Add(uri));
         return services;
     }
 

@@ -13,7 +13,7 @@ public class ResourceDictionaryOptions
     public ResourceDictionaryOptions()
     {
         DataTemplates = new List<DataTemplateDescriptor>();
-        Sources = new List<Uri>();
+        Sources = new List<string>();
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ public class ResourceDictionaryOptions
     /// <summary>
     /// Gets external resources to merge.
     /// </summary>
-    public IList<Uri> Sources
+    public IList<string> Sources
     {
         get;
         init;
