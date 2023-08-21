@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Markup;
+using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -47,12 +48,11 @@ public sealed class WpfHostedService<TApplication, TMainWindow> : BackgroundServ
         var thread = new Thread(() =>
         {
             var application = serviceProvider.GetRequiredService<TApplication>();
-            var mainWindow = serviceProvider.GetRequiredService<TMainWindow>();
             using var cancellationTokenRegistration = stoppingToken.Register(application.Shutdown);
             application.InitializeComponent();
             SetupResourceDictionary(application);
-
-            _ = application.Run(mainWindow);
+            _ = application.Dispatcher.InvokeAsync(StartMainWindow, DispatcherPriority.Send, CancellationToken.None);
+            _ = application.Run();
             taskCompletionSource.SetResult();
             hostApplicationLifetime.StopApplication();
         });
@@ -87,6 +87,16 @@ public sealed class WpfHostedService<TApplication, TMainWindow> : BackgroundServ
             }
 
             application.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = uri });
+        }
+    }
+
+    private void StartMainWindow()
+    {
+        var mainWindow = serviceProvider.GetRequiredService<TMainWindow>();
+        Application.Current.MainWindow = mainWindow;
+        if (mainWindow.Visibility != Visibility.Visible)
+        {
+            mainWindow.Show();
         }
     }
 }
