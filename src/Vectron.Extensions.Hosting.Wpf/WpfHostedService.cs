@@ -48,7 +48,8 @@ public sealed class WpfHostedService<TApplication, TMainWindow> : BackgroundServ
         var thread = new Thread(() =>
         {
             var application = serviceProvider.GetRequiredService<TApplication>();
-            using var cancellationTokenRegistration = stoppingToken.Register(application.Shutdown);
+            using var cancellationTokenRegistration = stoppingToken.Register(
+                () => _ = application.Dispatcher.InvokeAsync(application.Shutdown, DispatcherPriority.Send, CancellationToken.None));
             application.InitializeComponent();
             SetupResourceDictionary(application);
             _ = application.Dispatcher.InvokeAsync(StartMainWindow, DispatcherPriority.Send, CancellationToken.None);
