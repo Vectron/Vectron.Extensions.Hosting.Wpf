@@ -13,33 +13,22 @@ namespace Vectron.Extensions.Hosting.Wpf;
 /// </summary>
 /// <typeparam name="TApplication">The type of the Wpf application entry point.</typeparam>
 /// <typeparam name="TMainWindow">The main window to show.</typeparam>
-public sealed class WpfHostedService<TApplication, TMainWindow> : BackgroundService
+/// <remarks>
+/// Initializes a new instance of the <see cref="WpfHostedService{TApplication, TMainWindow}"/> class.
+/// </remarks>
+/// <param name="serviceProvider">A <see cref="IServiceProvider"/> for resolving services.</param>
+/// <param name="hostApplicationLifetime">The <see cref="IHostApplicationLifetime"/>.</param>
+/// <param name="options">Options for configuring the <see cref="ResourceDictionary"/>.</param>
+/// <param name="logger">A <see cref="ILogger"/>.</param>
+public sealed class WpfHostedService<TApplication, TMainWindow>(
+    IServiceProvider serviceProvider,
+    IHostApplicationLifetime hostApplicationLifetime,
+    IOptions<ResourceDictionaryOptions> options,
+    ILogger<WpfHostedService<TApplication, TMainWindow>> logger) : BackgroundService
     where TApplication : Application, IComponentConnector
     where TMainWindow : Window, IComponentConnector
 {
-    private readonly IHostApplicationLifetime hostApplicationLifetime;
-    private readonly ILogger<WpfHostedService<TApplication, TMainWindow>> logger;
-    private readonly IServiceProvider serviceProvider;
-    private readonly ResourceDictionaryOptions settings;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="WpfHostedService{TApplication, TMainWindow}"/> class.
-    /// </summary>
-    /// <param name="serviceProvider">A <see cref="IServiceProvider"/> for resolving services.</param>
-    /// <param name="hostApplicationLifetime">The <see cref="IHostApplicationLifetime"/>.</param>
-    /// <param name="options">Options for configuring the <see cref="ResourceDictionary"/>.</param>
-    /// <param name="logger">A <see cref="ILogger"/>.</param>
-    public WpfHostedService(
-        IServiceProvider serviceProvider,
-        IHostApplicationLifetime hostApplicationLifetime,
-        IOptions<ResourceDictionaryOptions> options,
-        ILogger<WpfHostedService<TApplication, TMainWindow>> logger)
-    {
-        this.serviceProvider = serviceProvider;
-        this.hostApplicationLifetime = hostApplicationLifetime;
-        this.logger = logger;
-        settings = options.Value;
-    }
+    private readonly ResourceDictionaryOptions settings = options.Value;
 
     /// <inheritdoc/>
     protected override Task ExecuteAsync(CancellationToken stoppingToken)

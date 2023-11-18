@@ -14,7 +14,7 @@ internal static class DataTemplateUtilities
     /// <param name="dataType">The type of the DataType key.</param>
     /// <param name="viewType">The type of the view to use.</param>
     /// <returns>The constructed <see cref="DataTemplate"/>.</returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "MA0101:String contains an implicit end of line character", Justification = "Idea is to use new lines.")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "MA0136:Raw String contains an implicit end of line character", Justification = "Idea is to use new lines.")]
     public static DataTemplate CreateDataTemplate(Type dataType, Type viewType)
     {
         var xaml = $$"""
@@ -25,7 +25,7 @@ internal static class DataTemplateUtilities
 
         var context = new ParserContext
         {
-            XamlTypeMapper = new XamlTypeMapper(Array.Empty<string>()),
+            XamlTypeMapper = new XamlTypeMapper([]),
         };
         context.XamlTypeMapper.AddMappingProcessingInstruction("vm", dataType.Namespace, dataType.Assembly.FullName);
         context.XamlTypeMapper.AddMappingProcessingInstruction("v", viewType.Namespace, viewType.Assembly.FullName);
