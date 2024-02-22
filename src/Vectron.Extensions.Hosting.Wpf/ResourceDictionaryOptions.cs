@@ -12,8 +12,8 @@ public class ResourceDictionaryOptions
     /// </summary>
     public ResourceDictionaryOptions()
     {
-        DataTemplates = new List<DataTemplateDescriptor>();
-        Sources = new List<string>();
+        DataTemplates = [];
+        Sources = [];
     }
 
     /// <summary>
