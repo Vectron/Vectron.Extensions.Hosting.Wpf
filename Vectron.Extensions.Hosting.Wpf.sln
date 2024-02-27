@@ -20,6 +20,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{3FDA2E46-183C-4EDB-B6B3-85C5B766BD91}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\BuildTestDeploy.yml = .github\workflows\BuildTestDeploy.yml
+		.github\workflows\DependabotAutoMerge.yml = .github\workflows\DependabotAutoMerge.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9741578B-89EB-4C40-B62F-417025EBCCDF}"
