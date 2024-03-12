@@ -29,28 +29,38 @@ public sealed class WpfHostedService<TApplication, TMainWindow>(
     where TMainWindow : Window, IComponentConnector
 {
     private readonly ResourceDictionaryOptions settings = options.Value;
+    private readonly TaskCompletionSource taskCompletionSource = new();
 
     /// <inheritdoc/>
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var taskCompletionSource = new TaskCompletionSource();
-        var thread = new Thread(() =>
+        var thread = new Thread(RunApplication);
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start(stoppingToken);
+        return taskCompletionSource.Task;
+    }
+
+    private void RunApplication(object? obj)
+    {
+        try
         {
             var application = serviceProvider.GetRequiredService<TApplication>();
-            using var cancellationTokenRegistration = stoppingToken.Register(
-                () => _ = application.Dispatcher.InvokeAsync(application.Shutdown, DispatcherPriority.Send, CancellationToken.None));
+            if (obj is CancellationToken cancellationToken)
+            {
+                using var cancellationTokenRegistration = cancellationToken.Register(
+                    () => _ = application.Dispatcher.InvokeAsync(application.Shutdown, DispatcherPriority.Send, CancellationToken.None));
+            }
+
             application.InitializeComponent();
             SetupResourceDictionary(application);
             _ = application.Dispatcher.InvokeAsync(StartMainWindow, DispatcherPriority.Send, CancellationToken.None);
             _ = application.Run();
+        }
+        finally
+        {
             taskCompletionSource.SetResult();
             hostApplicationLifetime.StopApplication();
-        });
-
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.Start();
-
-        return taskCompletionSource.Task;
+        }
     }
 
     private void SetupResourceDictionary(TApplication application)
