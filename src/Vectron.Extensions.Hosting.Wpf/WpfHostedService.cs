@@ -34,7 +34,13 @@ public sealed class WpfHostedService<TApplication, TMainWindow>(
     /// <inheritdoc/>
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var thread = new Thread(RunApplication);
+        var thread = new Thread(RunApplication)
+        {
+            Name = "Wpf host UI thread",
+            IsBackground = false,
+            Priority = ThreadPriority.Normal,
+        };
+
         thread.SetApartmentState(ApartmentState.STA);
         thread.Start(stoppingToken);
         return taskCompletionSource.Task;
